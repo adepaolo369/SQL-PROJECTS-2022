@@ -1,0 +1,20 @@
+ALTER TABLE [A]
+ADD IMGSwitch varbinary(max); // An intermediate column is created to hold the IMG data converted into varbinary data.
+ 
+UPDATE [A]
+  SET IMGSwitch = [C];//Intermediate column is set equal to the entries within the IMG data type column.
+ 
+UPDATE [A]
+SET [B] = cast('' as xml).value('xs:base64Binary(sql:column("[A].IMGSwitch"))', 'varchar(max)'); 
+//Using Microsoft's SQL Server Management's XML casting capibilites, the varbinary is converted into varchar data type.
+ 
+ALTER TABLE [A]
+DROP COLUMN IMGSwitch;
+//The intermediate column is dropped from table.
+
+
+//KEY:
+
+[A] = User's specificed table(full pathway, including database)
+[C] = User's column containing data of IMG type
+[B] = User's column that will hold VarChar conversion data.
